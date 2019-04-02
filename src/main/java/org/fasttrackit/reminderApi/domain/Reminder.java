@@ -19,6 +19,17 @@ public class Reminder {
     @Temporal(TemporalType.TIMESTAMP)
     private Date remindDate;
 
+    @Column(name = "description", nullable = false, length = 200)
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public Reminder() {
     }
 

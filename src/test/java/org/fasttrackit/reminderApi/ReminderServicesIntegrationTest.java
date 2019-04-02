@@ -26,15 +26,38 @@ public class ReminderServicesIntegrationTest {
 
     @Test
     public void testCreateReminder() throws ParseException {
-        CreateReminderRequest request = new CreateReminderRequest();
+        CreateReminderRequest createReminder1 = new CreateReminderRequest();
+        CreateReminderRequest createReminder2 = new CreateReminderRequest();
+
         String stringDate = "16-02-2019";
         SimpleDateFormat index = new SimpleDateFormat("dd-MM-yyyy");
         Date date1 = index.parse(stringDate);
-        request.setRemindDate(date1);
-        request.setTitle("Day off");
-        Reminder reminder = services.createReminder(request);
+        createReminder1.setRemindDate(date1);
+        createReminder1.setTitle("Day off");
+        createReminder1.setDescription("Saint Patrick's Day");
 
-        assertThat(reminder, notNullValue());
-        assertThat(reminder.getId(), greaterThan(0L));
+        String stringDate2 = "18-04-2019";
+        SimpleDateFormat index2 = new SimpleDateFormat("dd-MM-yyyy");
+        Date date2 = index2.parse(stringDate2);
+        createReminder2.setRemindDate(date2);
+        createReminder2.setTitle("Work");
+        createReminder2.setDescription("No comment");
+
+        Reminder reminder1 = services.createReminder(createReminder1);
+        Reminder reminder2 = services.createReminder(createReminder2);
+
+        assertThat(reminder1, notNullValue());
+        assertThat(reminder1.getId(), greaterThan(0L));
+        assertThat(reminder2, notNullValue());
+        assertThat(reminder2.getId(), greaterThan(0L));
+
+        System.out.println("Reminders created in table: " + services.getAllReminders());
+        System.out.println("Deleting reminder - " + reminder1.getTitle());
+        services.removeReminder(reminder1);
+
+        System.out.println("Returning deleted reminder.");
+        services.saveReminder(reminder1);
+
+
     }
 }
