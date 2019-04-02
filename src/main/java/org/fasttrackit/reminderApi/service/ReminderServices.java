@@ -13,13 +13,13 @@ import java.util.List;
 @Service
 public class ReminderServices implements ReminderServicesRequest{
 
-
+    @Autowired
     private ReminderRepository repository;
     private final ObjectMapper objectMapper;
     private final ReminderRepository reminderRepository;
 
 
-    @Autowired
+
     public List<Reminder> getAllReminders(){
         return repository.findAll();
     }
@@ -35,7 +35,7 @@ public class ReminderServices implements ReminderServicesRequest{
 
 
 
-    @Autowired
+
     public ReminderServices(ObjectMapper objectMapper, ReminderRepository reminderRepository) {
         this.objectMapper = objectMapper;
         this.reminderRepository = reminderRepository;
