@@ -53,10 +53,10 @@ public class ReminderServicesIntegrationTest {
 
         System.out.println("Reminders created in table: " + services.getAllReminders());
         System.out.println("Deleting reminder - " + reminder1.getTitle());
-        services.removeReminder(reminder1);
+        services.deleteReminder(reminder1);
 
         System.out.println("Returning deleted reminder.");
-        services.saveReminder(reminder1);
+        services.updateReminder(reminder1);
 
 
     }

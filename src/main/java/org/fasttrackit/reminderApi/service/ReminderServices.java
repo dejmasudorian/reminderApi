@@ -11,9 +11,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ReminderServices implements ReminderServicesRequest{
+public class ReminderServices {
 
-    @Autowired
+
+
     private ReminderRepository repository;
     private final ObjectMapper objectMapper;
     private final ReminderRepository reminderRepository;
@@ -26,16 +27,15 @@ public class ReminderServices implements ReminderServicesRequest{
     public Reminder getReminder(long id){
         return repository.getOne(id);
     }
-    public Reminder saveReminder(Reminder reminder){
+    public Reminder updateReminder(Reminder reminder){
         return repository.saveAndFlush(reminder);
     }
-    public void removeReminder(Reminder reminder){
+    public void deleteReminder(Reminder reminder){
         repository.delete(reminder);
     }
 
 
-
-
+    @Autowired
     public ReminderServices(ObjectMapper objectMapper, ReminderRepository reminderRepository) {
         this.objectMapper = objectMapper;
         this.reminderRepository = reminderRepository;
