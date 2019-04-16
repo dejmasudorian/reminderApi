@@ -6,6 +6,9 @@ import org.fasttrackit.reminderApi.persistence.ReminderRepository;
 import org.fasttrackit.reminderApi.transfer.CreateReminderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import java.util.List;
@@ -20,16 +23,26 @@ public class ReminderServices {
     private final ReminderRepository reminderRepository;
 
 
-
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
     public List<Reminder> getAllReminders(){
         return repository.findAll();
     }
-    public Reminder getReminder(long id){
+
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public Reminder getReminder (long id){
         return repository.getOne(id);
     }
+
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
     public Reminder updateReminder(Reminder reminder){
         return repository.saveAndFlush(reminder);
     }
+
+    @RequestMapping(method = RequestMethod.DELETE)
+    @ResponseBody
     public void deleteReminder(Reminder reminder){
         repository.delete(reminder);
     }
