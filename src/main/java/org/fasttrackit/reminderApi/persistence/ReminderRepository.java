@@ -1,8 +1,8 @@
 package org.fasttrackit.reminderApi.persistence;
 
 import org.fasttrackit.reminderApi.domain.Reminder;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface ReminderRepository extends JpaRepository<Reminder,Long> {
+public interface ReminderRepository extends PagingAndSortingRepository<Reminder, Long> {
 
 }

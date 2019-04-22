@@ -2,50 +2,26 @@ package org.fasttrackit.reminderApi.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fasttrackit.reminderApi.domain.Reminder;
+import org.fasttrackit.reminderApi.exception.ResourceNotFoundException;
 import org.fasttrackit.reminderApi.persistence.ReminderRepository;
-import org.fasttrackit.reminderApi.transfer.CreateReminderRequest;
+import org.fasttrackit.reminderApi.transfer.Reminder.CreateReminderRequest;
+import org.fasttrackit.reminderApi.transfer.Reminder.GetReminderRequest;
+import org.fasttrackit.reminderApi.transfer.Reminder.UpdateReminderRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-
-import java.util.List;
 
 @Service
 public class ReminderServices {
 
 
-
-    private ReminderRepository repository;
     private final ObjectMapper objectMapper;
     private final ReminderRepository reminderRepository;
-
-
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public List<Reminder> getAllReminders(){
-        return repository.findAll();
-    }
-
-    @RequestMapping(method = RequestMethod.GET)
-    @ResponseBody
-    public Reminder getReminder (long id){
-        return repository.getOne(id);
-    }
-
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public Reminder updateReminder(Reminder reminder){
-        return repository.saveAndFlush(reminder);
-    }
-
-    @RequestMapping(method = RequestMethod.DELETE)
-    @ResponseBody
-    public void deleteReminder(Reminder reminder){
-        repository.delete(reminder);
-    }
 
 
     @Autowired
@@ -54,11 +30,51 @@ public class ReminderServices {
         this.reminderRepository = reminderRepository;
     }
 
-    public Reminder createReminder(CreateReminderRequest request){
+    private static final Logger LOGGER =
+            LoggerFactory.getLogger(ReminderServices.class);
+
+
+    public Reminder createReminder(CreateReminderRequest request) {
+        LOGGER.info("Creating reminder {}", request);
         Reminder reminder = objectMapper.convertValue(request, Reminder.class);
+        return reminderRepository.save(reminder);
+    }
+
+    public Reminder getReminder(long id) throws ResourceNotFoundException {
+        LOGGER.info("Retrieving reminder {}", id);
+        return reminderRepository.findById(id)
+                // Optional and lambda expression
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "Reminder " + id + " not found"));
+    }
+/*
+    public List<Reminder> getAllReminders(){
+        LOGGER.info("Retrieving reminder: ");
+        return reminderRepository.findAll();
+    }
+*/
+    public Page<Reminder> getReminder(GetReminderRequest request, Pageable pageable) {
+        LOGGER.info("Retrieving reminder >> {}", request);
+
+        // set conditions for overdue dates
+        // convert Date type to int
+
+        return reminderRepository.findAll(pageable);
+    }
+
+    public Reminder updateReminder(long id, UpdateReminderRequest request) throws ResourceNotFoundException {
+        LOGGER.info("Updating reminder {}, {}", id, request);
+        Reminder reminder = getReminder(id);
+
+        BeanUtils.copyProperties(request, reminder);
 
         return reminderRepository.save(reminder);
     }
 
+    public void deleteReminder(long id) {
+        LOGGER.info("Deleting reminder {}", id);
+        reminderRepository.deleteById(id);
+        LOGGER.info("Deleted product {}", id);
+    }
 
 }

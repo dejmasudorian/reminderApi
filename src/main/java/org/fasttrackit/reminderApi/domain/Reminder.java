@@ -7,34 +7,15 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "remind_table")
 public class Reminder {
 
     @Id
-    @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment", strategy = "increment")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "title", nullable = false, length = 50)
     private String title;
 
-    @Column(name = "remind_year", nullable = false)
-    @Temporal(TemporalType.TIMESTAMP)
     private Date remindDate;
-
-    @Column(name = "description", nullable = false, length = 200)
-    private String description;
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Reminder() {
-    }
 
     public long getId() {
         return id;
@@ -56,9 +37,16 @@ public class Reminder {
         return remindDate;
     }
 
-    public void setRemindDate(Date remind_Date) {
-        this.remindDate = remind_Date;
-
+    public void setRemindDate(Date remindDate) {
+        this.remindDate = remindDate;
     }
 
+    @Override
+    public String toString() {
+        return "Reminder{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", remindDate=" + remindDate +
+                '}';
+    }
 }
