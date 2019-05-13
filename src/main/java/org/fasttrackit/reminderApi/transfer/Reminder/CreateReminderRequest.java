@@ -1,23 +1,22 @@
 package org.fasttrackit.reminderApi.transfer.Reminder;
 
-import javax.validation.constraints.NotBlank;
+import org.fasttrackit.reminderApi.domain.LevelOfImportance;
+
 import java.util.Date;
 
 public class CreateReminderRequest {
 
-    @NotBlank
     private String title;
+
+    private LevelOfImportance levelOfImportance;
+
+    private String details;
+
     private Date remindDate;
-    @NotBlank
-    private String description;
 
-    public String getDescription() {
-        return description;
-    }
+    private Date reminderCreatedDate;
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    private String createdBy;
 
     public String getTitle() {
         return title;
@@ -25,6 +24,22 @@ public class CreateReminderRequest {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public LevelOfImportance getLevelOfImportance() {
+        return levelOfImportance;
+    }
+
+    public void setLevelOfImportance(LevelOfImportance levelOfImportance) {
+        this.levelOfImportance = levelOfImportance;
+    }
+
+    public String getDetails() {
+        return details;
+    }
+
+    public void setDetails(String details) {
+        this.details = details;
     }
 
     public Date getRemindDate() {
@@ -35,12 +50,31 @@ public class CreateReminderRequest {
         this.remindDate = remindDate;
     }
 
+    public Date getReminderCreatedDate() {
+        return reminderCreatedDate;
+    }
+
+    public void setReminderCreatedDate(Date reminderCreatedDate) {
+        this.reminderCreatedDate = reminderCreatedDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     @Override
     public String toString() {
         return "CreateReminderRequest{" +
                 "title='" + title + '\'' +
+                ", levelOfImportance=" + levelOfImportance +
+                ", details='" + details + '\'' +
                 ", remindDate=" + remindDate +
-                ", description='" + description + '\'' +
+                ", reminderCreatedDate=" + reminderCreatedDate +
+                ", createdBy='" + createdBy + '\'' +
                 '}';
     }
 }
