@@ -5,17 +5,20 @@ import org.fasttrackit.reminderApi.domain.Reminder;
 import org.fasttrackit.reminderApi.service.ReminderServices;
 import org.fasttrackit.reminderApi.transfer.Reminder.CreateReminderRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
 import java.util.Date;
 
 import static org.fasttrackit.reminderApi.domain.LevelOfImportance.MEDIUM;
 
+@Component
 public class ReminderSteps {
 
     @Autowired
     private ReminderServices reminderServices;
+
     private DatetoString datetoString;
 
     public Reminder createReminder() throws ParseException {

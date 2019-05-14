@@ -1,9 +1,13 @@
 package org.fasttrackit.reminderApi;
 
+import org.fasttrackit.reminderApi.domain.DatetoString;
 import org.fasttrackit.reminderApi.domain.Event;
 import org.fasttrackit.reminderApi.exception.ResourceNotFoundException;
-import org.fasttrackit.reminderApi.service.ReminderServices;
-import org.fasttrackit.reminderApi.transfer.Event.CreateEventRequest;
+import org.fasttrackit.reminderApi.service.EventService;
+
+import org.fasttrackit.reminderApi.steps.EventSteps;
+import org.fasttrackit.reminderApi.transfer.Event.GetEventRequest;
+import org.fasttrackit.reminderApi.transfer.Event.UpdateEventRequest;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -21,84 +28,89 @@ import static org.hamcrest.Matchers.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class EventServicesIntegrationTest {
-/*
-    @Autowired
-    private ProductService productService;
 
     @Autowired
-    private ProductSteps productSteps;
+    private EventService eventService;
+
+    @Autowired
+    private EventSteps eventSteps;
+
+    private DatetoString datetoString;
 
     @Test
-    public void testCreateProduct_whenValidRequest_thenReturnProductWithId() {
-        Product product = productSteps.createProduct();
+    public void testCreateEvent_whenValidRequest_thenReturnEventWithId() throws ParseException {
+        Event event = eventSteps.createEvent();
 
-        assertThat(product, CoreMatchers.notNullValue());
-        assertThat(product.getId(), greaterThan(0L));
+        assertThat(event, CoreMatchers.notNullValue());
+        assertThat(event.getId(), greaterThan(0L));
     }
 
     @Test(expected = ResourceNotFoundException.class)
-    public void testGetProduct_whenProductNotFound_thenThrowResourceNotFoundException() throws ResourceNotFoundException {
-        productService.getProduct(0);
+    public void testGetEvent_whenEventNotFound_thenThrowResourceNotFoundException() throws ResourceNotFoundException {
+        eventService.getEvent(0);
     }
 
     @Test
-    public void testGetProduct_whenExistingId_thenReturnMatchingProduct() throws ResourceNotFoundException {
-        Product product = productSteps.createProduct();
+    public void testGetEvent_whenExistingId_thenReturnMatchingEvent() throws ResourceNotFoundException, ParseException {
+        Event event = eventSteps.createEvent();
 
-        Product retrievedProduct = productService.getProduct(product.getId());
+        Event retrievedEvent = eventService.getEvent(event.getId());
 
-        assertThat(retrievedProduct.getId(), is(product.getId()));
-        assertThat(retrievedProduct.getName(), is(product.getName()));
+        assertThat(retrievedEvent.getId(), is(event.getId()));
+        assertThat(retrievedEvent.getTitle(), is(event.getTitle()));
     }
 
     @Test
-    public void testUpdateProduct_whenValidRequestWithAllFields_thenReturnUpdatedProduct() throws ResourceNotFoundException {
-        Product createdProduct = productSteps.createProduct();
+    public void testUpdateEvent_whenValidRequestWithAllFields_thenReturnUpdatedEvent() throws ResourceNotFoundException, ParseException {
+        Event createdEvent = eventSteps.createEvent();
 
-        UpdateProductRequest request = new UpdateProductRequest();
-        request.setName(createdProduct.getName() + "_Edited");
-        request.setPrice(createdProduct.getPrice() + 10);
-        request.setQuantity(createdProduct.getQuantity() + 10);
-        request.setSku(createdProduct.getSku() + "_Edited");
+        UpdateEventRequest request = new UpdateEventRequest();
+        request.setTitle(createdEvent.getTitle() + "_Edited");
+        request.setDescription(createdEvent.getDescription() + "_Edited");
+        request.setEventDate(createdEvent.getEventDate());
 
-        Product updatedProduct =
-                productService.updateProduct(createdProduct.getId(), request);
+        Event updatedEvent =
+                eventService.updateEvent(createdEvent.getId(), request);
 
-        assertThat(updatedProduct.getName(), is(request.getName()));
-        assertThat(updatedProduct.getName(), not(is(createdProduct.getName())));
+        assertThat(updatedEvent.getTitle(), is(request.getTitle()));
+        assertThat(updatedEvent.getTitle(), not(is(createdEvent.getTitle())));
 
-        assertThat(updatedProduct.getPrice(), is(request.getPrice()));
-        assertThat(updatedProduct.getQuantity(), is(request.getQuantity()));
-        assertThat(updatedProduct.getSku(), is(request.getSku()));
+        assertThat(updatedEvent.getDescription(), is(request.getDescription()));
+        assertThat(updatedEvent.getEventDate(), is(request.getEventDate()));
 
-        assertThat(updatedProduct.getId(), is(createdProduct.getId()));
+        assertThat(updatedEvent.getId(), is(createdEvent.getId()));
     }
 
     // todo: Implement negative tests for update and tests for update with some fields only
 
     @Test(expected = ResourceNotFoundException.class)
-    public void testDeleteProduct_whenExistingId_thenProductIsDeleted() throws ResourceNotFoundException {
-        Product createdProduct = productSteps.createProduct();
+    public void testDeleteEvent_whenExistingId_thenEventIsDeleted() throws ResourceNotFoundException, ParseException {
+        Event createdEvent = eventSteps.createEvent();
 
-        productService.deleteProduct(createdProduct.getId());
+        eventService.deleteEvent(createdEvent.getId());
 
-        productService.getProduct(createdProduct.getId());
+        eventService.getEvent(createdEvent.getId());
     }
 
-    @Test
-    public void testGetProducts_whenAllCriteriaProvidedAndMatching_thenReturnFilteredResults() {
-        Product createdProduct = productSteps.createProduct();
+ /*   @Test
+    public void testGetEvent_whenAllCriteriaProvidedAndMatching_thenReturnFilteredResults() throws ParseException {
+        Event createdEvent = eventSteps.createEvent();
 
-        GetProductRequest request = new GetProductRequest();
-        request.setPartialName("top");
-        request.setMinimumPrice(9.9);
-        request.setMaximumPrice(10.1);
-        request.setMinimumQuantity(1);
+        //Date date1 = datetoString.converter("16-02-2019");
+        SimpleDateFormat index = new SimpleDateFormat("dd-MM-yyyy");
+        Date date1 = index.parse("16-02-2019");
 
-        Page<Product> products =
-                productService.getProducts(request, PageRequest.of(0, 10));
+        GetEventRequest request = new GetEventRequest();
+        request.setDaysLeft(eventService.compareDays(request));
+        request.setSearchTitle("Family Gathering");
+        request.setDaysOverdue(eventService.compareDays(request));
+        request.setEventDate(date1);
 
-        assertThat(products.getTotalElements(), greaterThanOrEqualTo(1L));*/
+        Page<Event> events =
+                eventService.getEvent(request, PageRequest.of(0, 31));
+
+        assertThat(events.getTotalElements(), greaterThanOrEqualTo(1L));
 
         // todo: for each product from the response assert that all criteria are matched
+    }*/
 }

@@ -11,4 +11,5 @@ public interface EventRepository extends PagingAndSortingRepository<Event, Long>
 
     Page<Event> findEventByTitleAndAndEventDateLessThan(
             String searchTitle, long daysLeft, Pageable pageable);
+
 }
