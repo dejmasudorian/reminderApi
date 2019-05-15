@@ -15,7 +15,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
+
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.TimeUnit;
 
 
@@ -50,13 +54,30 @@ public class EventService {
                         "Event " + id + " not found"));
     }
 
+    public Iterable<Event> getAllEvents(){
+        return eventRepository.findAll();}
 
-    public int compareDays(GetEventRequest request) {
-        Date today = new Date();
-        long diff = request.getEventDate().getTime() - today.getTime();
-        long numberOfDays = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-        int converter= Math.toIntExact(numberOfDays);
+    public static <Event> Set<Event> toSet(final Iterable<Event> iterable) {
+        final Set<Event> set = new TreeSet<Event>();
+        for (Iterator<Event> i = iterable.iterator(); i.hasNext();) {
+            set.add(i.next());
+        }
+        return set;
+    }
+
+
+    public int compareDays(Date getTimeIndex) {
+        long diffInMillies = Math.abs(getTimeIndex.getTime() - System.currentTimeMillis());
+        long diff = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        int converter = (int) diff;
         return converter;
+    }
+
+    public void designateDaysLeftOrOverdue(GetEventRequest request, Date getTimeIndex){
+        if(compareDays(getTimeIndex)>0)
+            request.setDaysLeft(compareDays(getTimeIndex));
+        else if (compareDays(getTimeIndex)<0)
+            request.setDaysOverdue(compareDays(getTimeIndex));
     }
 
     public Page<Event> getEvent(GetEventRequest request, Pageable pageable) {
@@ -65,11 +86,11 @@ public class EventService {
         // set conditions for overdue dates
 
         if (request.getSearchTitle() != null &&
-                compareDays(request)>0) {
+                request.getDaysOverdue()>0) {
             return eventRepository.findEventByTitleAndAndEventDateGreaterThan(
                     request.getSearchTitle(), request.getDaysOverdue(), pageable);}
         else if (request.getSearchTitle() != null &&
-                compareDays(request)<0) {
+                request.getDaysLeft()<0) {
             return eventRepository.findEventByTitleAndAndEventDateLessThan(
                     request.getSearchTitle(), request.getDaysLeft(), pageable);}
         return eventRepository.findAll(pageable);

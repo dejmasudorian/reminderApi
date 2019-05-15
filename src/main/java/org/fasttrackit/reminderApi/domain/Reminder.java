@@ -1,11 +1,7 @@
 package org.fasttrackit.reminderApi.domain;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -15,17 +11,9 @@ public class Reminder {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String title;
-
-    private LevelOfImportance levelOfImportance;
-
-    private String details;
-
-    private Date remindDate;
-
-    private Date reminderCreatedDate;
-
-    private String createdBy;
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    private Notice notice;
 
     @ManyToMany(cascade = CascadeType.MERGE)
     @JoinTable(name = "reminder_event",
@@ -52,52 +40,12 @@ public class Reminder {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public Notice getNotice() {
+        return notice;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public LevelOfImportance getLevelOfImportance() {
-        return levelOfImportance;
-    }
-
-    public void setLevelOfImportance(LevelOfImportance levelOfImportance) {
-        this.levelOfImportance = levelOfImportance;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    public Date getRemindDate() {
-        return remindDate;
-    }
-
-    public void setRemindDate(Date remindDate) {
-        this.remindDate = remindDate;
-    }
-
-    public Date getReminderCreatedDate() {
-        return reminderCreatedDate;
-    }
-
-    public void setReminderCreatedDate(Date reminderCreatedDate) {
-        this.reminderCreatedDate = reminderCreatedDate;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
+    public void setNotice(Notice notice) {
+        this.notice = notice;
     }
 
     public Set<Event> getEvents() {
@@ -112,15 +60,19 @@ public class Reminder {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Reminder reminder = (Reminder) o;
-        return id == reminder.id &&
-                Objects.equals(events, reminder.events);
+
+        if (id != reminder.id) return false;
+        if (notice != null ? !notice.equals(reminder.notice) : reminder.notice != null) return false;
+        return events != null ? events.equals(reminder.events) : reminder.events == null;
     }
 
     @Override
     public int hashCode() {
-            int result = (int) (id ^ (id >>> 32));
-            result = 31 * result + (events != null ? events.hashCode() : 0);
-            return result;
-        }
+        int result = (int) (id ^ (id >>> 32));
+        result = 31 * result + (notice != null ? notice.hashCode() : 0);
+        result = 31 * result + (notice != null ? events.hashCode() : 0);
+        return result;
     }
+}

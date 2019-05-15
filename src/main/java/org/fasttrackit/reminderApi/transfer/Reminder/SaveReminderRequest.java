@@ -4,7 +4,16 @@ import java.util.Set;
 
 public class SaveReminderRequest {
 
+    private long noticeId;
     private Set<Long> eventIds;
+
+    public long getNoticeId() {
+        return noticeId;
+    }
+
+    public void setNoticeId(long noticeId) {
+        this.noticeId = noticeId;
+    }
 
     public Set<Long> getEventIds() {
         return eventIds;
@@ -17,7 +26,8 @@ public class SaveReminderRequest {
     @Override
     public String toString() {
         return "SaveReminderRequest{" +
-                "eventIds=" + eventIds +
+                "noticeId=" + noticeId +
+                ", eventIds=" + eventIds +
                 '}';
     }
 }

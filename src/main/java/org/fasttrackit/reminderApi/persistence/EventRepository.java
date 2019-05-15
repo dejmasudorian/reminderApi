@@ -7,9 +7,9 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 public interface EventRepository extends PagingAndSortingRepository<Event, Long> {
 
     Page<Event> findEventByTitleAndAndEventDateGreaterThan(
-            String searchTitle, long daysOverdue, Pageable pageable);
+            String searchTitle, int daysOverdue, Pageable pageable);
 
     Page<Event> findEventByTitleAndAndEventDateLessThan(
-            String searchTitle, long daysLeft, Pageable pageable);
+            String searchTitle, int daysLeft, Pageable pageable);
 
 }

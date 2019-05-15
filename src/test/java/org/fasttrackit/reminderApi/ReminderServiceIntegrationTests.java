@@ -1,10 +1,12 @@
 package org.fasttrackit.reminderApi;
 
 import org.fasttrackit.reminderApi.domain.Event;
+import org.fasttrackit.reminderApi.domain.Notice;
 import org.fasttrackit.reminderApi.domain.Reminder;
 import org.fasttrackit.reminderApi.exception.ResourceNotFoundException;
 import org.fasttrackit.reminderApi.service.ReminderServices;
 import org.fasttrackit.reminderApi.steps.EventSteps;
+import org.fasttrackit.reminderApi.steps.NoticeSteps;
 import org.fasttrackit.reminderApi.transfer.Reminder.SaveReminderRequest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,23 +28,29 @@ public class ReminderServiceIntegrationTests {
 
 	@Autowired
 	private ReminderServices reminderServices;
+
 	@Autowired
 	private EventSteps eventSteps;
 
-	@Test
-	public void testAddEventsToReminder_whenValidRequest_thenReturnReminder() throws ResourceNotFoundException, ParseException {
+	@Autowired
+	private NoticeSteps noticeSteps;
 
+	@Test
+	public void testAddEventsToReminder_whenValidRequest_thenReturnCart() throws ResourceNotFoundException, ParseException {
 		Event event = eventSteps.createEvent();
+		Notice notice = noticeSteps.createNotice();
 
 		SaveReminderRequest request = new SaveReminderRequest();
+		request.setNoticeId(notice.getId());
 		request.setEventIds(Collections.singleton(event.getId()));
 
-		Reminder reminder = reminderServices.addEventsToReminder(request);
+		Reminder reminder = reminderServices.addEventToReminder(request);
 
 		assertThat(reminder, notNullValue());
+		assertThat(reminder.getId(), is(notice.getId()));
+
 		assertThat(reminder.getEvents(), notNullValue());
 		assertThat(reminder.getEvents(), hasSize(1));
-
 	}
 
 }

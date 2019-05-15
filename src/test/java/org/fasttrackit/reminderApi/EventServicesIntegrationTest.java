@@ -92,7 +92,7 @@ public class EventServicesIntegrationTest {
         eventService.getEvent(createdEvent.getId());
     }
 
- /*   @Test
+   @Test
     public void testGetEvent_whenAllCriteriaProvidedAndMatching_thenReturnFilteredResults() throws ParseException {
         Event createdEvent = eventSteps.createEvent();
 
@@ -101,10 +101,10 @@ public class EventServicesIntegrationTest {
         Date date1 = index.parse("16-02-2019");
 
         GetEventRequest request = new GetEventRequest();
-        request.setDaysLeft(eventService.compareDays(request));
-        request.setSearchTitle("Family Gathering");
-        request.setDaysOverdue(eventService.compareDays(request));
         request.setEventDate(date1);
+
+        request.setSearchTitle("Family Gathering");
+        eventService.designateDaysLeftOrOverdue(request,request.getEventDate());
 
         Page<Event> events =
                 eventService.getEvent(request, PageRequest.of(0, 31));
@@ -112,5 +112,5 @@ public class EventServicesIntegrationTest {
         assertThat(events.getTotalElements(), greaterThanOrEqualTo(1L));
 
         // todo: for each product from the response assert that all criteria are matched
-    }*/
+    }
 }

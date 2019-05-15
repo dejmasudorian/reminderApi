@@ -1,22 +1,18 @@
-package org.fasttrackit.reminderApi.transfer.Reminder;
+package org.fasttrackit.reminderApi.transfer.Notice;
 
 import org.fasttrackit.reminderApi.domain.LevelOfImportance;
 
 import java.util.Date;
 
-public class UpdateReminderRequest {
+public class UpdateNoticeRequest {
 
     private String title;
-
     private LevelOfImportance levelOfImportance;
-
     private String details;
-
     private Date remindDate;
-
     private Date reminderCreatedDate;
-
     private String createdBy;
+
 
     public String getTitle() {
         return title;
@@ -68,7 +64,7 @@ public class UpdateReminderRequest {
 
     @Override
     public String toString() {
-        return "CreateReminderRequest{" +
+        return "CreateNoticeRequest{" +
                 "title='" + title + '\'' +
                 ", levelOfImportance=" + levelOfImportance +
                 ", details='" + details + '\'' +

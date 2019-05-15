@@ -1,14 +1,10 @@
 package org.fasttrackit.reminderApi.domain;
 
-
-
-
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -73,7 +69,9 @@ public class Event {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
+
         Event event = (Event) o;
+
         return id == event.id;
     }
 

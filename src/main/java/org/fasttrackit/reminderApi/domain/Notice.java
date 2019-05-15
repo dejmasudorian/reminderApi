@@ -1,11 +1,22 @@
-package org.fasttrackit.reminderApi.transfer.Reminder;
+package org.fasttrackit.reminderApi.domain;
 
-import org.fasttrackit.reminderApi.domain.LevelOfImportance;
-
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
-public class CreateReminderRequest {
+@Entity
+public class Notice {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @NotNull
+    @Size(min = 1, max = 20)
     private String title;
 
     private LevelOfImportance levelOfImportance;
@@ -17,6 +28,14 @@ public class CreateReminderRequest {
     private Date reminderCreatedDate;
 
     private String createdBy;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -68,13 +87,29 @@ public class CreateReminderRequest {
 
     @Override
     public String toString() {
-        return "CreateReminderRequest{" +
-                "title='" + title + '\'' +
+        return "Notice{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
                 ", levelOfImportance=" + levelOfImportance +
                 ", details='" + details + '\'' +
                 ", remindDate=" + remindDate +
                 ", reminderCreatedDate=" + reminderCreatedDate +
                 ", createdBy='" + createdBy + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Notice notice = (Notice) o;
+
+        return id == notice.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return (int) (id ^ (id >>> 32));
     }
 }

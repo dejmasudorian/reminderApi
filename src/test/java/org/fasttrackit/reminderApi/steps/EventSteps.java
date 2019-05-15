@@ -20,7 +20,6 @@ public class EventSteps {
 
     public Event createEvent() throws ParseException {
         CreateEventRequest request = new CreateEventRequest();
-//        Date date1 = datetoString.converter("16-02-2019");
         SimpleDateFormat index = new SimpleDateFormat("dd-MM-yyyy");
         Date date1 = index.parse("16-02-2019");
 

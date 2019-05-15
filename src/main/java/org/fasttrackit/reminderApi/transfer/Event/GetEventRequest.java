@@ -5,8 +5,8 @@ import java.util.Date;
 
 public class GetEventRequest {
 
-    private long daysOverdue;
-    private long daysLeft;
+    private int daysOverdue;
+    private int daysLeft;
     private String searchTitle;
     private Date eventDate;
 
@@ -19,20 +19,19 @@ public class GetEventRequest {
         this.searchTitle = searchTitle;
     }
 
-
-    public long getDaysOverdue() {
+    public int getDaysOverdue() {
         return daysOverdue;
     }
 
-    public void setDaysOverdue(long daysOverdue) {
+    public void setDaysOverdue(int daysOverdue) {
         this.daysOverdue = daysOverdue;
     }
 
-    public long getDaysLeft() {
+    public int getDaysLeft() {
         return daysLeft;
     }
 
-    public void setDaysLeft(long daysLeft) {
+    public void setDaysLeft(int daysLeft) {
         this.daysLeft = daysLeft;
     }
 
