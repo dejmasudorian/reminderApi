@@ -5,6 +5,7 @@ import org.fasttrackit.reminderApi.domain.Event;
 import org.fasttrackit.reminderApi.exception.ResourceNotFoundException;
 import org.fasttrackit.reminderApi.persistence.EventRepository;
 import org.fasttrackit.reminderApi.transfer.Event.CreateEventRequest;
+import org.fasttrackit.reminderApi.transfer.Event.EventResponse;
 import org.fasttrackit.reminderApi.transfer.Event.GetEventRequest;
 import org.fasttrackit.reminderApi.transfer.Event.UpdateEventRequest;
 import org.slf4j.Logger;
@@ -13,13 +14,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -80,20 +79,36 @@ public class EventService {
             request.setDaysOverdue(compareDays(getTimeIndex));
     }
 
-    public Page<Event> getEvent(GetEventRequest request, Pageable pageable) {
+    public Page<EventResponse> getEvent(GetEventRequest request, Pageable pageable) {
         LOGGER.info("Retrieving event >> {}", request);
+
+        Page<Event> events;
 
         // set conditions for overdue dates
 
         if (request.getSearchTitle() != null &&
                 request.getDaysOverdue()>0) {
-            return eventRepository.findEventByTitleAndAndEventDateGreaterThan(
+            events = eventRepository.findEventByTitleAndAndEventDateGreaterThan(
                     request.getSearchTitle(), request.getDaysOverdue(), pageable);}
         else if (request.getSearchTitle() != null &&
                 request.getDaysLeft()<0) {
-            return eventRepository.findEventByTitleAndAndEventDateLessThan(
+            events = eventRepository.findEventByTitleAndAndEventDateLessThan(
                     request.getSearchTitle(), request.getDaysLeft(), pageable);}
-        return eventRepository.findAll(pageable);
+        else { events = eventRepository.findAll(pageable);}
+
+        List<EventResponse> eventResponses = new ArrayList<>();
+
+        for (Event event : events.getContent()) {
+            EventResponse eventResponse = new EventResponse();
+            eventResponse.setId(event.getId());
+            eventResponse.setTitle(event.getTitle());
+            eventResponse.setDescription(event.getDescription());
+
+            eventResponses.add(eventResponse);
+        }
+
+        return new PageImpl<>(
+                eventResponses, pageable, events.getTotalElements());
     }
 
     public Event updateEvent(long id, UpdateEventRequest request) throws ResourceNotFoundException {

@@ -6,6 +6,7 @@ import org.fasttrackit.reminderApi.exception.ResourceNotFoundException;
 import org.fasttrackit.reminderApi.service.EventService;
 
 import org.fasttrackit.reminderApi.steps.EventSteps;
+import org.fasttrackit.reminderApi.transfer.Event.EventResponse;
 import org.fasttrackit.reminderApi.transfer.Event.GetEventRequest;
 import org.fasttrackit.reminderApi.transfer.Event.UpdateEventRequest;
 import org.hamcrest.CoreMatchers;
@@ -106,7 +107,7 @@ public class EventServicesIntegrationTest {
         request.setSearchTitle("Family Gathering");
         eventService.designateDaysLeftOrOverdue(request,request.getEventDate());
 
-        Page<Event> events =
+        Page<EventResponse> events =
                 eventService.getEvent(request, PageRequest.of(0, 31));
 
         assertThat(events.getTotalElements(), greaterThanOrEqualTo(1L));
