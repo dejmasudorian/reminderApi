@@ -3,7 +3,6 @@ package org.fasttrackit.reminderApi.web;
 import org.fasttrackit.reminderApi.domain.Event;
 import org.fasttrackit.reminderApi.exception.ResourceNotFoundException;
 import org.fasttrackit.reminderApi.service.EventService;
-import org.fasttrackit.reminderApi.service.ReminderServices;
 import org.fasttrackit.reminderApi.transfer.Event.CreateEventRequest;
 import org.fasttrackit.reminderApi.transfer.Event.EventResponse;
 import org.fasttrackit.reminderApi.transfer.Event.GetEventRequest;
@@ -46,7 +45,7 @@ public class EventController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity updateReminder(
+    public ResponseEntity updateEvent(
             @PathVariable("id") long id,
             @RequestBody @Valid UpdateEventRequest request) throws ResourceNotFoundException {
         eventService.updateEvent(id, request);
@@ -54,13 +53,13 @@ public class EventController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteReminder(@PathVariable("id") long id) {
+    public ResponseEntity deleteEvent(@PathVariable("id") long id) {
         eventService.deleteEvent(id);
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @GetMapping
-    public ResponseEntity<Page<EventResponse>> getProducts(
+    public ResponseEntity<Page<EventResponse>> getEvent(
             @Valid GetEventRequest request, Pageable pageable) {
         Page<EventResponse> response = eventService.getEvent(request, pageable);
         return new ResponseEntity<>(response, HttpStatus.OK);}

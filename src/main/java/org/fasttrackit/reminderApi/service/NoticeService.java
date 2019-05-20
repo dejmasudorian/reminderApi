@@ -52,7 +52,7 @@ public class NoticeService {
         return noticeRepository.save(notice);
     }
 
-    public void deleteReminder(long id) {
+    public void deleteNotice(long id) {
         LOGGER.info("Deleting notice {}", id);
         noticeRepository.deleteById(id);
         LOGGER.info("Deleted notice {}", id);
